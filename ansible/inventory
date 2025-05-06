@@ -1,0 +1,6 @@
+
+##############################################
+# Static inventory of servers
+##############################################
+[spo-dev]
+spo-data-processor ansible_host=<ewc_ip_adress> ansible_port=22 ansible_python_interpreter=/usr/bin/python3

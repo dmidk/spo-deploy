@@ -1,0 +1,6 @@
+---
+
+- hosts: spo-data-processor
+  gather_facts: true
+  roles:
+    - spo-pipeline

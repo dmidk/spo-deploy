@@ -1,0 +1,12 @@
+---
+
+#####################
+# Include vars
+#####################
+
+- name: Include role environment variables
+  include_vars:
+    dir: "vars"
+    extensions:
+      - "yml"
+
