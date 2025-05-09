@@ -1,2 +1,13 @@
 ---
 user_home: '/home/{{ ansible_user }}'
+
+# Docker built locally
+fetcher_image: "spo-firebase-fetcher:latest"
+
+# Which Firebase fetchers to run
+fetcher_apps:
+  - dmi
+  - sfs
+
+# Base path on the target host where JSON creds live
+spo_base_path: "/home/elbadmin/spo_firebase_fetcher/spo_firebase_fetcher"

@@ -10,3 +10,43 @@
     extensions:
       - "yml"
 
+- name: Install Docker engine
+  apt:
+    name: docker.io
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Ensure Docker service is running
+  service:
+    name: docker
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Pull the Firebase Fetcher image
+  community.docker.docker_image:
+    name: "{{ fetcher_image }}"
+    source: pull
+  become: yes
+
+- name: Show which creds file we will mount
+  debug:
+    msg: "→ {{ spo_base_path }}/{{ item }}app_firebase.json"
+  loop: "{{ fetcher_apps }}"
+
+- name: Run one fetcher container per app
+  community.docker.docker_container:
+    name: "firebase-fetcher-{{ item }}"
+    image: "{{ fetcher_image }}"
+    state: started
+    restart_policy: unless-stopped
+    volumes:
+      - "{{ spo_base_path }}/{{ item }}app_firebase.json:/creds/credentials.json:ro"
+    command:
+      - "--cred_path"
+      - "/creds/credentials.json"
+      - "--app"
+      - "{{ item }}"
+  loop: "{{ fetcher_apps }}"
+  become: yes
