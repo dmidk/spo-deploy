@@ -40,13 +40,26 @@
     name: "firebase-fetcher-{{ item }}"
     image: "{{ fetcher_image }}"
     state: started
-    restart_policy: unless-stopped
+    restart_policy: "no"
     volumes:
       - "{{ spo_base_path }}/{{ item }}app_firebase.json:/creds/credentials.json:ro"
+    env:
+      AWS_ACCESS_KEY_ID: "{{ aws_access_key }}"
+      AWS_SECRET_ACCESS_KEY: "{{ aws_secret_key }}"
+      AWS_DEFAULT_REGION: "{{ aws_region }}"
+      S3_BUCKET_NAME: "{{ s3_bucket_name }}"
     command:
       - "--cred_path"
       - "/creds/credentials.json"
       - "--app"
       - "{{ item }}"
+  loop: "{{ fetcher_apps }}"
+  become: yes
+
+- name: Set up cron job to restart fetcher containers every 10 minutes
+  cron:
+    name: "Restart firebase-fetcher-{{ item }}"
+    minute: "*/10"
+    job: "docker restart firebase-fetcher-{{ item }}"
   loop: "{{ fetcher_apps }}"
   become: yes
