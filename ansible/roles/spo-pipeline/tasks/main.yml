@@ -1,14 +1,15 @@
 ---
-
 #####################
 # Include vars
 #####################
 
-- name: Include role environment variables
+- name: Include role variables
   include_vars:
-    dir: "vars"
-    extensions:
-      - "yml"
+    file: "{{ role_path }}/vars/main.yml"
+
+- name: Include role credentials
+  include_vars:
+    file: "{{ role_path }}/vars/credentials.yml"
 
 - name: Install Docker engine
   apt:
@@ -44,10 +45,13 @@
     volumes:
       - "{{ spo_base_path }}/{{ item }}app_firebase.json:/creds/credentials.json:ro"
     env:
-      AWS_ACCESS_KEY_ID: "{{ aws_access_key }}"
-      AWS_SECRET_ACCESS_KEY: "{{ aws_secret_key }}"
-      AWS_DEFAULT_REGION: "{{ aws_region }}"
-      S3_BUCKET_NAME: "{{ s3_bucket_name }}"
+      OBJECT_STORE_ENDPOINT: "{{ object_store_endpoint }}"
+      OBJECT_STORE_BUCKET: "{{ object_store_bucket }}"
+      OBJECT_STORE_REGION: "{{ object_store_region }}"
+      OBJECT_STORE_ACCESS_KEY: "{{ object_store_access_key }}"
+      OBJECT_STORE_SECRET_KEY: "{{ object_store_secret_key }}"
+      ESOH_USERNAME: "{{ esoh_username }}"
+      ESOH_PASSWORD: "{{ esoh_password }}"
     command:
       - "--cred_path"
       - "/creds/credentials.json"

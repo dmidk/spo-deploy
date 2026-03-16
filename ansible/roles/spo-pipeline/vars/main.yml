@@ -11,3 +11,7 @@ fetcher_apps:
 
 # Base path on the target host where JSON creds live
 spo_base_path: "/home/elbadmin/spo_firebase_fetcher/spo_firebase_fetcher"
+
+object_store_endpoint: "https://object-store.os-api.cci1.ecmwf.int"
+object_store_bucket: "spo-firebase-data"
+object_store_region: "default"
